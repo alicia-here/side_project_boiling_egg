@@ -1,0 +1,802 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #FFFFFF;
+  color: #1A1A1A;
+  min-width: 900px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Header ───────────────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 48px;
+  border-bottom: 1px solid #F0EFED;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.clock {
+  font-size: 13px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: #888888;
+}
+
+/* ── Layout ───────────────────────────────────────── */
+.app-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.panel-left {
+  width: 240px;
+  flex-shrink: 0;
+  border-right: 1px solid #F0EFED;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-right {
+  width: 280px;
+  flex-shrink: 0;
+  border-left: 1px solid #F0EFED;
+  padding: 20px 16px;
+  overflow-y: auto;
+}
+
+/* ── Tab nav ──────────────────────────────────────── */
+.tab-nav {
+  display: flex;
+  padding: 0 16px;
+  border-bottom: 1px solid #EBEBEB;
+  flex-shrink: 0;
+  background: #FFFFFF;
+}
+
+.tab-btn {
+  padding: 12px 2px;
+  margin-right: 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  color: #888888;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.tab-btn--active {
+  color: #1A1A1A;
+  font-weight: 600;
+  border-bottom-color: #1A1A1A;
+}
+
+/* ── Left panel scroll content ────────────────────── */
+.panel-scroll-content {
+  padding: 16px 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ── Section ──────────────────────────────────────── */
+.section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 12px;
+}
+
+/* ── Utilities ────────────────────────────────────── */
+.hidden {
+  display: none !important;
+}
+
+.empty-msg {
+  font-size: 12px;
+  color: #BBBBBB;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* ── Input ────────────────────────────────────────── */
+.todo-input-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.input-field {
+  flex: 1;
+  height: 32px;
+  border: 1px solid #DDDDDD;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #1A1A1A;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background: #FFFFFF;
+}
+
+.input-field:focus {
+  border-color: #1A1A1A;
+}
+
+.input-field::placeholder {
+  color: #BBBBBB;
+  font-size: 12px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #DDDDDD;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: #1A1A1A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: #F0EFED;
+}
+
+/* ── Todo List ────────────────────────────────────── */
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+  user-select: none;
+}
+
+.todo-item:hover {
+  background: #F7F7F6;
+}
+
+.todo-item.active {
+  background: #FAFAFA;
+  border: 1px solid #E0E0E0;
+}
+
+.todo-item:hover .todo-delete {
+  opacity: 1;
+}
+
+.todo-checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #DDDDDD;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.todo-checkbox.checked {
+  background: #1A1A1A;
+  border-color: #1A1A1A;
+}
+
+.todo-checkbox.checked::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 5px;
+  border-left: 1.5px solid #FFFFFF;
+  border-bottom: 1.5px solid #FFFFFF;
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+.todo-text {
+  font-size: 13px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.todo-text.done {
+  text-decoration: line-through;
+  color: #BBBBBB;
+}
+
+.todo-delete {
+  opacity: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #BBBBBB;
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.todo-delete:hover {
+  color: #888888;
+}
+
+/* ── Timeline ─────────────────────────────────────── */
+.timeline-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timeline-item {
+  font-size: 12px;
+  color: #888888;
+  padding: 3px 0;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+/* ── Current task info (left panel) ──────────────── */
+.current-task-info {
+  font-size: 12px;
+  color: #1A1A1A;
+  background: #FAFAFA;
+  border: 1px solid #EBEBEB;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.current-task-info .label {
+  color: #888888;
+  font-size: 11px;
+  margin-bottom: 2px;
+}
+
+/* ── Progress ─────────────────────────────────────── */
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-percent {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: #1A1A1A;
+}
+
+.progress-bar-track {
+  height: 4px;
+  border-radius: 2px;
+  background: #EBEBEB;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: #1A1A1A;
+  width: 0%;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.progress-bar-fill.complete {
+  background: #E8834A;
+}
+
+/* ── Buttons ──────────────────────────────────────── */
+.btn-primary {
+  height: 36px;
+  padding: 0 18px;
+  background: #1A1A1A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-primary:not(:disabled):hover {
+  opacity: 0.8;
+}
+
+.btn-primary:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── Center states ────────────────────────────────── */
+.center-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow-y: auto;
+  gap: 12px;
+}
+
+.center-state--top {
+  justify-content: flex-start;
+  padding-top: 48px;
+}
+
+/* ── Egg circle ───────────────────────────────────── */
+.egg-circle {
+  width: 80px;
+  height: 80px;
+  background: #F0EFED;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.egg-circle.egg-done {
+  background: #E8834A;
+}
+
+.egg-circle-sm {
+  width: 56px;
+  height: 56px;
+  background: #F0EFED;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 12px;
+  transition: background 0.2s ease;
+}
+
+.egg-circle-sm.egg-done {
+  background: #E8834A;
+}
+
+.center-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.center-sub {
+  font-size: 13px;
+  color: #888888;
+}
+
+/* ── Next todo section (center idle) ─────────────── */
+.next-todo-section {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 24px;
+}
+
+/* ── Working state ────────────────────────────────── */
+.working-card {
+  background: #FAFAFA;
+  border: 1.5px solid #1A1A1A;
+  border-radius: 10px;
+  padding: 24px 28px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.working-label {
+  font-size: 11px;
+  color: #888888;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.working-task-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1A1A1A;
+  line-height: 1.3;
+}
+
+.working-start-time {
+  font-size: 12px;
+  color: #888888;
+  font-variant-numeric: tabular-nums;
+}
+
+.working-elapsed {
+  font-size: 32px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  color: #1A1A1A;
+  margin: 8px 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.completed-timeline-section {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 20px;
+}
+
+/* ── Review ───────────────────────────────────────── */
+.review-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1A1A1A;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 4px;
+}
+
+.review-summary {
+  width: 100%;
+  max-width: 480px;
+  background: #FAFAFA;
+  border: 1px solid #EBEBEB;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.review-prompt {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1A1A1A;
+  width: 100%;
+  max-width: 480px;
+  line-height: 1.6;
+}
+
+.review-textarea {
+  width: 100%;
+  max-width: 480px;
+  min-height: 160px;
+  border: 1px solid #DDDDDD;
+  border-radius: 8px;
+  padding: 14px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #1A1A1A;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+  line-height: 1.7;
+  background: #FFFFFF;
+}
+
+.review-textarea:focus {
+  border-color: #1A1A1A;
+}
+
+.done-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #E8834A;
+}
+
+/* ── Right panel ──────────────────────────────────── */
+.right-guide {
+  font-size: 12px;
+  color: #888888;
+  text-align: center;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+/* ── Tone cards ───────────────────────────────────── */
+.tone-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tone-card {
+  cursor: pointer;
+  display: block;
+}
+
+.tone-card input[type="radio"] {
+  display: none;
+}
+
+.tone-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #EBEBEB;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  background: #FFFFFF;
+}
+
+.tone-card-inner:hover {
+  background: #FAFAFA;
+}
+
+.tone-card input[type="radio"]:checked + .tone-card-inner {
+  border: 1.5px solid #1A1A1A;
+  background: #FAFAFA;
+}
+
+.tone-emoji {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.tone-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.tone-desc {
+  font-size: 11px;
+  color: #888888;
+  margin-top: 2px;
+}
+
+/* ── Calendar ─────────────────────────────────────── */
+.calendar-wrap {
+  width: 100%;
+  max-width: 560px;
+}
+
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.cal-month-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.cal-nav-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #DDDDDD;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: #1A1A1A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.cal-nav-btn:hover {
+  background: #F0EFED;
+}
+
+.cal-dow-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.cal-dow {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  padding: 6px 0;
+  color: #1A1A1A;
+}
+
+.cal-dow--sun { color: #E8834A; }
+.cal-dow--sat { color: #888888; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.cal-cell {
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.cal-cell--has-record {
+  cursor: pointer;
+}
+
+.cal-cell--has-record:hover {
+  background: #F0EFED;
+}
+
+.cal-egg {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.cal-date-num {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #1A1A1A;
+  font-weight: 400;
+}
+
+.cal-date-num--today {
+  background: #1A1A1A;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.cal-date-num--future {
+  color: #DDDDDD;
+}
+
+.cal-date-num--no-record {
+  color: #BBBBBB;
+}
+
+/* ── Date detail (right panel) ────────────────────── */
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.detail-date-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A1A1A;
+  line-height: 1.4;
+}
+
+.btn-close {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #888888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-close:hover {
+  color: #1A1A1A;
+}
+
+.detail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-completed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 13px;
+  color: #1A1A1A;
+  line-height: 1.5;
+}
+
+.detail-check {
+  color: #1A1A1A;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.detail-tone-badge {
+  display: inline-block;
+  font-size: 11px;
+  color: #888888;
+  background: #F0EFED;
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin-bottom: 8px;
+}
+
+.detail-reflection-text {
+  font-size: 13px;
+  color: #1A1A1A;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.detail-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 0;
+  color: #888888;
+  font-size: 13px;
+}

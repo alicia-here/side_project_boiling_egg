@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>삶은달걀</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <span class="logo">🥚 삶은달걀</span>
+    <span class="clock" id="clock"></span>
+  </header>
+
+  <div class="app-layout">
+
+    <!-- LEFT PANEL -->
+    <aside class="panel panel-left">
+
+      <div class="tab-nav">
+        <button class="tab-btn tab-btn--active" id="tab-today">오늘</button>
+        <button class="tab-btn" id="tab-calendar">캘린더</button>
+      </div>
+
+      <div id="today-content" class="panel-scroll-content">
+
+        <section class="section">
+          <h2 class="section-title">오늘 할 일</h2>
+          <div class="todo-input-row">
+            <input type="text" id="todo-input" class="input-field" placeholder="할 일 입력 후 엔터">
+            <button id="todo-add-btn" class="btn-icon" title="추가">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <ul class="todo-list" id="todo-list"></ul>
+          <p class="empty-msg" id="todo-empty">아직 할 일이 없습니다</p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">오늘의 기록</h2>
+          <div id="current-task-info" class="current-task-info hidden"></div>
+          <ul class="timeline-list" id="timeline-list"></ul>
+          <p class="empty-msg" id="timeline-empty">진행 예정</p>
+        </section>
+
+        <section class="section">
+          <div class="progress-header">
+            <span class="section-title" style="margin-bottom:0">오늘 진행률</span>
+            <span class="progress-percent" id="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+        </section>
+
+      </div>
+
+    </aside>
+
+    <!-- CENTER PANEL -->
+    <main class="panel panel-center">
+
+      <!-- 기본 상태 -->
+      <div id="center-idle" class="center-state">
+        <div class="egg-circle" id="egg-idle">🥚</div>
+        <p class="center-title">천천히 익어가는 하루.</p>
+        <p class="center-sub">현재 진행 중인 작업을 기록해보세요.</p>
+        <div class="next-todo-section">
+          <h3 class="section-title">다음 할 일</h3>
+          <ul id="next-todo-list" class="todo-list"></ul>
+          <p class="empty-msg" id="next-todo-empty">진행할 작업이 없습니다</p>
+        </div>
+      </div>
+
+      <!-- 작업 진행 중 -->
+      <div id="center-working" class="center-state hidden">
+        <div class="working-card">
+          <p class="working-label">진행 중</p>
+          <p class="working-task-name" id="working-task-name"></p>
+          <p class="working-start-time" id="working-start-time"></p>
+          <p class="working-elapsed" id="working-elapsed">00:00</p>
+          <button id="complete-btn" class="btn-primary">작업 완료</button>
+        </div>
+        <div class="completed-timeline-section">
+          <h3 class="section-title">완료된 작업</h3>
+          <ul id="working-timeline-list" class="timeline-list"></ul>
+          <p class="empty-msg" id="working-timeline-empty">아직 완료된 작업이 없습니다</p>
+        </div>
+      </div>
+
+      <!-- 회고 Step 1: 오늘 요약 -->
+      <div id="center-review-1" class="center-state center-state--top hidden">
+        <h2 class="review-title">오늘 요약</h2>
+        <div class="review-summary">
+          <h3 class="section-title">완료한 할 일</h3>
+          <ul id="review-completed-list" class="todo-list"></ul>
+          <h3 class="section-title" style="margin-top:20px">타임라인</h3>
+          <ul id="review-timeline-list" class="timeline-list"></ul>
+        </div>
+        <button id="review-start-btn" class="btn-primary">회고 시작하기</button>
+      </div>
+
+      <!-- 회고 Step 2: 회고 작성 -->
+      <div id="center-review-2" class="center-state center-state--top hidden">
+        <h2 class="review-title">오늘의 회고</h2>
+        <p class="review-prompt" id="review-prompt"></p>
+        <textarea id="review-textarea" class="review-textarea" placeholder="자유롭게 작성해보세요..."></textarea>
+        <button id="review-submit-btn" class="btn-primary">의미 정리하기</button>
+      </div>
+
+      <!-- 회고 Step 3: 저장 -->
+      <div id="center-review-3" class="center-state hidden">
+        <div class="egg-circle egg-done">🥚</div>
+        <p class="done-title">하루가 익었어요.</p>
+        <textarea id="review-final-text" class="review-textarea"></textarea>
+        <button id="save-btn" class="btn-primary">저장하기</button>
+      </div>
+
+      <!-- 저장 완료 -->
+      <div id="center-saved" class="center-state hidden">
+        <div class="egg-circle egg-done">🥚</div>
+        <p class="done-title">하루가 익었어요.</p>
+        <p class="center-sub">오늘 하루도 수고했어요.</p>
+      </div>
+
+      <!-- 캘린더 뷰 -->
+      <div id="center-calendar" class="center-state center-state--top hidden">
+        <div class="calendar-wrap">
+          <div class="cal-header">
+            <button class="cal-nav-btn" id="cal-prev" title="이전 달">
+              <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
+                <path d="M6 1L1 6l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <span class="cal-month-label" id="cal-month-label"></span>
+            <button class="cal-nav-btn" id="cal-next" title="다음 달">
+              <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
+                <path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="cal-dow-row">
+            <span class="cal-dow cal-dow--sun">일</span>
+            <span class="cal-dow">월</span>
+            <span class="cal-dow">화</span>
+            <span class="cal-dow">수</span>
+            <span class="cal-dow">목</span>
+            <span class="cal-dow">금</span>
+            <span class="cal-dow cal-dow--sat">토</span>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside class="panel panel-right">
+
+      <!-- 기본 회고 패널 -->
+      <div id="right-default">
+
+        <section class="section">
+          <h2 class="section-title">오늘의 회고</h2>
+          <div class="egg-circle-sm" id="egg-right">🥚</div>
+          <p class="right-guide">하루를 마무리하면 의미를 정리해보아요.</p>
+          <button id="finish-btn" class="btn-primary" disabled>하루 마무리하기</button>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">회고 톤 선택</h2>
+          <div class="tone-list">
+            <label class="tone-card">
+              <input type="radio" name="tone" value="coach" checked>
+              <div class="tone-card-inner">
+                <span class="tone-emoji">👤</span>
+                <div>
+                  <p class="tone-name">현명한 코치</p>
+                  <p class="tone-desc">전략을 주도하는 관점</p>
+                </div>
+              </div>
+            </label>
+            <label class="tone-card">
+              <input type="radio" name="tone" value="partner">
+              <div class="tone-card-inner">
+                <span class="tone-emoji">💬</span>
+                <div>
+                  <p class="tone-name">실전형 파트너</p>
+                  <p class="tone-desc">실천 중심의 대화</p>
+                </div>
+              </div>
+            </label>
+            <label class="tone-card">
+              <input type="radio" name="tone" value="counselor">
+              <div class="tone-card-inner">
+                <span class="tone-emoji">🫧</span>
+                <div>
+                  <p class="tone-name">심리상담가</p>
+                  <p class="tone-desc">감정을 정리하는 시간</p>
+                </div>
+              </div>
+            </label>
+            <label class="tone-card">
+              <input type="radio" name="tone" value="friend">
+              <div class="tone-card-inner">
+                <span class="tone-emoji">🌿</span>
+                <div>
+                  <p class="tone-name">따뜻한 친구</p>
+                  <p class="tone-desc">편안하게 털어놓는 대화</p>
+                </div>
+              </div>
+            </label>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- 날짜 상세 뷰 -->
+      <div id="right-date-detail" class="hidden">
+        <div class="detail-header">
+          <span id="detail-date-label" class="detail-date-label"></span>
+          <button id="detail-close-btn" class="btn-close" title="닫기">✕</button>
+        </div>
+
+        <!-- 빈 상태 (record 없음) -->
+        <div id="detail-no-record" class="detail-empty-state hidden">
+          <div class="egg-circle" style="width:56px;height:56px;font-size:24px">🥚</div>
+          <p>아직 기록이 없는 날이에요.</p>
+        </div>
+
+        <!-- 상세 콘텐츠 -->
+        <div id="detail-content" class="hidden">
+          <section class="section">
+            <h3 class="section-title">완료한 일</h3>
+            <ul id="detail-completed-list" class="detail-list"></ul>
+            <p class="empty-msg" id="detail-completed-empty">완료한 일이 없습니다</p>
+          </section>
+          <section class="section">
+            <h3 class="section-title">타임라인</h3>
+            <ul id="detail-timeline-list" class="timeline-list"></ul>
+            <p class="empty-msg" id="detail-timeline-empty">타임라인 기록이 없습니다</p>
+          </section>
+          <section class="section">
+            <h3 class="section-title">회고</h3>
+            <div id="detail-reflection" class="hidden"></div>
+            <p class="empty-msg" id="detail-reflection-empty">회고 기록이 없습니다</p>
+          </section>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
