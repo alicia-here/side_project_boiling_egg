@@ -1,5 +1,6 @@
 const TODOS_KEY = 'sbe_todos';
 const RECORDS_KEY = 'sbe_records';
+const LAST_DATE_KEY = 'sbe_last_date';
 
 export function getTodos() {
   try { return JSON.parse(localStorage.getItem(TODOS_KEY)) || []; }
@@ -29,4 +30,12 @@ export function getRecordByDate(dateString) {
 
 export function getAllRecordDates() {
   return getRecords().map(r => r.date);
+}
+
+export function getLastDate() {
+  return localStorage.getItem(LAST_DATE_KEY) || null;
+}
+
+export function saveLastDate(dateStr) {
+  localStorage.setItem(LAST_DATE_KEY, dateStr);
 }

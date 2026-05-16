@@ -1,4 +1,4 @@
-import { getTodos, saveTodos, saveRecord, getRecordByDate, getAllRecordDates } from './storage.js';
+import { getTodos, saveTodos, saveRecord, getRecordByDate, getAllRecordDates, getLastDate, saveLastDate } from './storage.js';
 
 // ── State ──────────────────────────────────────────────────────────
 let todos = getTodos();
@@ -592,6 +592,34 @@ calNextBtn.addEventListener('click', () => {
 
 detailCloseBtn.addEventListener('click', closeDetailView);
 
+// ── Date rollover ──────────────────────────────────────────────────
+function checkDateRollover() {
+  const today = new Date().toISOString().split('T')[0];
+  const lastDate = getLastDate();
+
+  if (lastDate && lastDate !== today) {
+    if (!getRecordByDate(lastDate) && todos.some(t => t.done)) {
+      const prevTimeline = buildTimelineFromTodos(todos);
+      saveRecord({
+        date: lastDate,
+        completedTasks: todos.filter(t => t.done).map(t => t.id),
+        timelineSummary: prevTimeline
+          .map(e => `${fmt(e.start)}~${fmt(e.end)} ${e.taskName}`)
+          .join(', '),
+        reflectionTone: null,
+        reflectionText: '',
+        savedAt: new Date().toISOString(),
+      });
+    }
+    todos = [];
+    saveTodos([]);
+    completedTimeline = [];
+  }
+
+  saveLastDate(today);
+}
+
 // ── Init ───────────────────────────────────────────────────────────
+checkDateRollover();
 renderAll();
 showCenter('idle');
