@@ -401,6 +401,7 @@ function showReviewSave() {
 }
 
 function saveReview() {
+  const reflectionText = $('review-final-text').value;
   const today = new Date().toISOString().split('T')[0];
   saveRecord({
     date: today,
@@ -409,9 +410,22 @@ function saveReview() {
       .map(e => `${fmt(e.start)}~${fmt(e.end)} ${e.taskName}`)
       .join(', '),
     reflectionTone: getSelectedTone(),
-    reflectionText: $('review-final-text').value,
+    reflectionText,
     savedAt: new Date().toISOString(),
   });
+
+  const timelineListEl = $('saved-timeline-list');
+  timelineListEl.innerHTML = '';
+  completedTimeline.forEach(e => {
+    const li = document.createElement('li');
+    li.textContent = `${fmt(e.start)} ~ ${fmt(e.end)}  ${e.taskName}`;
+    timelineListEl.appendChild(li);
+  });
+
+  const reflectionEl = $('saved-reflection-text');
+  reflectionEl.textContent = reflectionText;
+  reflectionEl.style.display = reflectionText.trim() ? '' : 'none';
+
   showCenter('saved');
 }
 
