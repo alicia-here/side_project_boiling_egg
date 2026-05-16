@@ -592,6 +592,7 @@ $('save-btn').addEventListener('click', saveReview);
 $('back-review-1').addEventListener('click', () => showCenter('idle'));
 $('back-review-2').addEventListener('click', () => showCenter('review1'));
 $('back-review-3').addEventListener('click', () => showCenter('review2'));
+$('back-saved').addEventListener('click', () => showCenter('review3'));
 
 tabTodayBtn.addEventListener('click', () => switchTab('today'));
 tabCalendarBtn.addEventListener('click', () => switchTab('calendar'));
