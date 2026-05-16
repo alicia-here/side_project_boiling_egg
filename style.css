@@ -479,6 +479,31 @@ body {
   letter-spacing: -0.01em;
 }
 
+.working-btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-outline {
+  height: 36px;
+  padding: 0 18px;
+  background: transparent;
+  color: #1A1A1A;
+  border: 1.5px solid #1A1A1A;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  opacity: 0.6;
+}
+
 .completed-timeline-section {
   width: 100%;
   max-width: 480px;

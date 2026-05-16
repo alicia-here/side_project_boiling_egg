@@ -51,6 +51,7 @@ const workingTaskNameEl    = $('working-task-name');
 const workingStartTimeEl   = $('working-start-time');
 const workingElapsedEl     = $('working-elapsed');
 const completeBtnEl        = $('complete-btn');
+const pauseBtnEl           = $('pause-btn');
 const workingTimelineEl    = $('working-timeline-list');
 const workingTimelineEmpty = $('working-timeline-empty');
 
@@ -300,19 +301,41 @@ function startTask(todoId) {
   const todo = todos.find(t => t.id === todoId && !t.done);
   if (!todo) return;
 
-  currentTask = { todoId, taskName: todo.text, startTime: new Date().toISOString() };
+  currentTask = { todoId, taskName: todo.text, startTime: new Date().toISOString(), isPaused: false, pausedAt: null, totalPausedMs: 0 };
   workingTaskNameEl.textContent = todo.text;
   workingStartTimeEl.textContent = `시작: ${fmt(currentTask.startTime)}`;
   workingElapsedEl.textContent = '00:00';
+  pauseBtnEl.textContent = '일시정지';
 
   elapsedTimer = setInterval(() => {
-    const ms = Date.now() - new Date(currentTask.startTime).getTime();
+    const ms = Date.now() - new Date(currentTask.startTime).getTime() - currentTask.totalPausedMs;
     workingElapsedEl.textContent = fmtElapsed(ms);
   }, 1000);
 
   renderAll();
   renderWorkingTimeline();
   showCenter('working');
+}
+
+function pauseTask() {
+  if (!currentTask || currentTask.isPaused) return;
+  clearInterval(elapsedTimer);
+  elapsedTimer = null;
+  currentTask.isPaused = true;
+  currentTask.pausedAt = new Date().toISOString();
+  pauseBtnEl.textContent = '재개';
+}
+
+function resumeTask() {
+  if (!currentTask || !currentTask.isPaused) return;
+  currentTask.totalPausedMs += Date.now() - new Date(currentTask.pausedAt).getTime();
+  currentTask.isPaused = false;
+  currentTask.pausedAt = null;
+  pauseBtnEl.textContent = '일시정지';
+  elapsedTimer = setInterval(() => {
+    const ms = Date.now() - new Date(currentTask.startTime).getTime() - currentTask.totalPausedMs;
+    workingElapsedEl.textContent = fmtElapsed(ms);
+  }, 1000);
 }
 
 function completeTask() {
@@ -546,6 +569,7 @@ todoInput.addEventListener('keydown', e => {
 });
 
 completeBtnEl.addEventListener('click', completeTask);
+pauseBtnEl.addEventListener('click', () => currentTask?.isPaused ? resumeTask() : pauseTask());
 finishBtnEl.addEventListener('click', startReview);
 $('review-start-btn').addEventListener('click', startReviewWrite);
 $('review-submit-btn').addEventListener('click', showReviewSave);
