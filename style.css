@@ -367,6 +367,7 @@ body {
 
 /* ── Center states ────────────────────────────────── */
 .center-state {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -375,6 +376,33 @@ body {
   padding: 40px;
   overflow-y: auto;
   gap: 12px;
+}
+
+.btn-back {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: #888888;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+}
+
+.btn-back .back-arrow {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.btn-back:hover {
+  color: #1A1A1A;
 }
 
 .center-state--top {
