@@ -81,6 +81,10 @@ function fmt(iso) {
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
+function localDateStr(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 function fmtElapsed(ms) {
   const s = Math.floor(ms / 1000);
   const h = Math.floor(s / 3600);
@@ -136,7 +140,7 @@ function updateClock() {
   const now = new Date();
   clockEl.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-  const today = now.toISOString().split('T')[0];
+  const today = localDateStr(now);
   if (getLastDate() !== today) {
     checkDateRollover();
     if (currentTask) {
@@ -414,7 +418,7 @@ function showReviewSave() {
 
 function saveReview() {
   const reflectionText = $('review-final-text').value;
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateStr();
   saveRecord({
     date: today,
     completedTasks: todos.filter(t => t.done).map(t => t.id),
@@ -625,7 +629,7 @@ detailCloseBtn.addEventListener('click', closeDetailView);
 
 // ── Date rollover ──────────────────────────────────────────────────
 function checkDateRollover() {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateStr();
   const lastDate = getLastDate();
 
   if (lastDate && lastDate !== today) {
