@@ -135,6 +135,18 @@ function parseTimelineSummary(summary) {
 function updateClock() {
   const now = new Date();
   clockEl.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+  const today = now.toISOString().split('T')[0];
+  if (getLastDate() !== today) {
+    checkDateRollover();
+    if (currentTask) {
+      clearInterval(elapsedTimer);
+      elapsedTimer = null;
+      currentTask = null;
+    }
+    renderAll();
+    showCenter('idle');
+  }
 }
 updateClock();
 setInterval(updateClock, 60000);
