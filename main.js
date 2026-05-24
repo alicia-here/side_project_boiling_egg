@@ -206,6 +206,7 @@ function renderTodoList() {
     const txt = document.createElement('span');
     txt.className = 'todo-text' + (todo.done ? ' done' : '');
     txt.textContent = todo.text;
+    txt.addEventListener('dblclick', e => { e.stopPropagation(); startInlineEdit(todo, txt); });
 
     const del = document.createElement('button');
     del.className = 'todo-delete';
@@ -221,6 +222,39 @@ function renderTodoList() {
   });
 
   todoEmptyEl.classList.toggle('hidden', todos.length > 0);
+}
+
+function startInlineEdit(todo, txtEl) {
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'todo-edit-input';
+  input.value = todo.text;
+  txtEl.replaceWith(input);
+  input.focus();
+  input.select();
+
+  let committed = false;
+  function commit() {
+    if (committed) return;
+    committed = true;
+    const newText = input.value.trim();
+    if (newText && newText !== todo.text) {
+      todo.text = newText;
+      if (currentTask?.todoId === todo.id) {
+        currentTask.taskName = newText;
+        workingTaskNameEl.textContent = newText;
+      }
+      completedTimeline = buildTimelineFromTodos(todos);
+      saveTodos(todos);
+    }
+    renderAll();
+  }
+
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    if (e.key === 'Escape') { committed = true; renderAll(); }
+  });
 }
 
 function renderCurrentTaskInfo() {

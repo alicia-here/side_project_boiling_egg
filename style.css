@@ -255,6 +255,19 @@ body {
   color: #BBBBBB;
 }
 
+.todo-edit-input {
+  font-size: 13px;
+  font-family: inherit;
+  flex: 1;
+  min-width: 0;
+  border: none;
+  border-bottom: 1px solid #1A1A1A;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  color: #1A1A1A;
+}
+
 .todo-delete {
   opacity: 0;
   background: none;
